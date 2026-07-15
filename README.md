@@ -1,6 +1,6 @@
 # Linker Corp - Utils
 
-Bienvenido al repositorio de utilidades y herramientas web de **Linker Corp**. Esta aplicación proporciona una colección centralizada de herramientas de productividad y desarrollo diseñadas para facilitar las tareas del día a día, con un enfoque en usabilidad, rapidez y diseño limpio.
+Bienvenido al repositorio de utilidades y herramientas web de **Linker Corp**. Esta aplicación proporciona una colección centralizada de herramientas de productividad y desarrollo diseñadas para facilitar las tareas del día a día, con un enfoque en usabilidad, rapidez y diseño limpio. Las herramientas son completamente gratuitas y de código abierto.
 
 ## 🚀 Herramientas Incluidas
 
