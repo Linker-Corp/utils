@@ -17,9 +17,10 @@ function App() {
     
     const themeLink = document.getElementById('theme-link');
     if (themeLink) {
+      const baseUrl = import.meta.env.BASE_URL;
       themeLink.href = isDark
-        ? '/themes/lara-dark-indigo/theme.css'
-        : '/themes/lara-light-indigo/theme.css';
+        ? `${baseUrl}themes/lara-dark-indigo/theme.css`
+        : `${baseUrl}themes/lara-light-indigo/theme.css`;
     }
   }, []);
 
@@ -30,9 +31,10 @@ function App() {
     
     const themeLink = document.getElementById('theme-link');
     if (themeLink) {
+      const baseUrl = import.meta.env.BASE_URL;
       themeLink.href = newTheme
-        ? '/themes/lara-dark-indigo/theme.css'
-        : '/themes/lara-light-indigo/theme.css';
+        ? `${baseUrl}themes/lara-dark-indigo/theme.css`
+        : `${baseUrl}themes/lara-light-indigo/theme.css`;
     }
   };
 
