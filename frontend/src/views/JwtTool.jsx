@@ -373,7 +373,7 @@ const JwtTool = () => {
             </div>
 
             <div className="col-12 lg:col-6 flex flex-column">
-              <div className="flex justify-content-between align-items-center mb-3">
+              <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-3 gap-2 md:gap-0">
                 <h3 className="m-0 text-xl font-semibold">Decoded Data</h3>
                 <div className="flex align-items-center">
                   <span className="font-medium mr-2">Algorithm detected:</span>
@@ -412,7 +412,7 @@ const JwtTool = () => {
           /* ENCODER MODE */
           <div className="grid mt-3">
             <div className="col-12 lg:col-6 flex flex-column mb-4 lg:mb-0">
-              <div className="flex justify-content-between align-items-center mb-3">
+              <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-3 gap-2 md:gap-0">
                 <h3 className="m-0 text-xl font-semibold">Data to Encode</h3>
                 <div className="flex align-items-center">
                   <span className="font-medium mr-2">Algorithm</span>
