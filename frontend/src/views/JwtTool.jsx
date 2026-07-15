@@ -96,20 +96,20 @@ const algorithms = [
 
 const JwtTool = () => {
   const navigate = useNavigate();
-  
+
   const [isDecoderMode, setIsDecoderMode] = useState(false);
   const [algorithm, setAlgorithm] = useState('HS256');
   const [token, setToken] = useState('');
-  
+
   const [headerJson, setHeaderJson] = useState('{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
   const [payloadJson, setPayloadJson] = useState('{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}');
-  
+
   const [secret, setSecret] = useState('your-256-bit-secret');
   const [secretBase64Encoded, setSecretBase64Encoded] = useState(false);
-  
+
   const [publicKey, setPublicKey] = useState(defaultRSAPublic);
   const [privateKey, setPrivateKey] = useState(defaultRSAPrivate);
-  
+
   const [isSignatureValid, setIsSignatureValid] = useState(true);
   const [isValidToken, setIsValidToken] = useState(true);
 
@@ -122,7 +122,7 @@ const JwtTool = () => {
       if (alg.startsWith('HS')) {
         let usedSecret = sec;
         if (secB64) {
-          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch(e){}
+          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { }
         }
         const hB64 = toBase64Url(hJson);
         const pB64 = toBase64Url(pJson);
@@ -156,7 +156,7 @@ const JwtTool = () => {
         if (parts.length !== 3) return false;
         let usedSecret = sec;
         if (secB64) {
-          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch(e){}
+          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { }
         }
         const data = parts[0] + '.' + parts[1];
         let hash;
@@ -198,7 +198,6 @@ const JwtTool = () => {
   // Inicializar encoder con valores por defecto
   useEffect(() => {
     updateFromDecoded(headerJson, payloadJson, algorithm, secret, secretBase64Encoded, publicKey, privateKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [algorithm]);
 
   const handleAlgorithmChange = (newAlg) => {
@@ -207,18 +206,18 @@ const JwtTool = () => {
       const hObj = JSON.parse(headerJson);
       hObj.alg = newAlg;
       setHeaderJson(JSON.stringify(hObj, null, 2));
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleTokenChange = (e) => {
     const newToken = e.target.value;
     setToken(newToken);
-    
+
     const parts = newToken.split('.');
     if (parts.length >= 2) {
       const hStr = fromBase64Url(parts[0]);
       const pStr = fromBase64Url(parts[1]);
-      
+
       let currentAlg = algorithm;
       try {
         const hObj = JSON.parse(hStr);
@@ -230,7 +229,7 @@ const JwtTool = () => {
       } catch (err) {
         setHeaderJson(hStr);
       }
-      
+
       try {
         const pObj = JSON.parse(pStr);
         setPayloadJson(JSON.stringify(pObj, null, 2));
@@ -268,7 +267,7 @@ const JwtTool = () => {
   const renderColoredToken = () => {
     const parts = token.split('.');
     if (parts.length === 0) return null;
-    
+
     return (
       <div className="p-inputtext p-component font-code text-xl line-height-3 p-4 w-full" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap', height: 'auto', minHeight: '150px' }}>
         {parts[0] && <span style={{ color: '#fb015b' }}>{parts[0]}</span>}
@@ -286,24 +285,24 @@ const JwtTool = () => {
         <div style={{ color: '#00b9f1' }}>
           {algorithm.startsWith('HS') ? `HMAC${algorithm.substring(2)}(` : `${algorithm}(`}
           <br />
-          <span className="pl-3">base64UrlEncode(header) + "." +</span>
+          <span className="pl-3">base64Encode(header) + "." +</span>
           <br />
-          <span className="pl-3">base64UrlEncode(payload),</span>
+          <span className="pl-3">base64Encode(payload),</span>
           <br />
-          
+
           {!isAsymmetric ? (
             <div className="pl-3 mt-3 mb-2">
-              <InputText 
-                value={secret} 
+              <InputText
+                value={secret}
                 onChange={(e) => handleDecodedChange('secret', e.target.value)}
                 placeholder="your-256-bit-secret"
                 className="w-full font-code"
               />
               <div className="flex align-items-center mt-3">
-                <Checkbox 
-                  inputId="b64cb" 
-                  checked={secretBase64Encoded} 
-                  onChange={(e) => handleDecodedChange('secretBase64Encoded', e.checked)} 
+                <Checkbox
+                  inputId="b64cb"
+                  checked={secretBase64Encoded}
+                  onChange={(e) => handleDecodedChange('secretBase64Encoded', e.checked)}
                 />
                 <label htmlFor="b64cb" className="ml-2 text-sm text-color-secondary">secret base64 encoded</label>
               </div>
@@ -312,7 +311,7 @@ const JwtTool = () => {
             <div className="pl-3 mt-3 mb-2 w-full">
               <div className="mb-3">
                 <label className="block mb-2 text-sm text-color-secondary font-bold">Public Key (Verification)</label>
-                <InputTextarea 
+                <InputTextarea
                   value={publicKey}
                   onChange={(e) => handleDecodedChange('publicKey', e.target.value)}
                   rows={4}
@@ -323,7 +322,7 @@ const JwtTool = () => {
               {!isDecoder && (
                 <div>
                   <label className="block mb-2 text-sm text-color-secondary font-bold">Private Key (Signature)</label>
-                  <InputTextarea 
+                  <InputTextarea
                     value={privateKey}
                     onChange={(e) => handleDecodedChange('privateKey', e.target.value)}
                     rows={4}
@@ -372,8 +371,8 @@ const JwtTool = () => {
               <div className="flex justify-content-between align-items-center mb-3">
                 <h3 className="m-0 text-xl font-semibold">Encoded Token (Paste here)</h3>
               </div>
-              <InputTextarea 
-                value={token} 
+              <InputTextarea
+                value={token}
                 onChange={handleTokenChange}
                 className={`w-full p-3 font-code text-xl font-bold mb-4 ${!isValidToken ? 'p-invalid' : ''}`}
                 style={{ minHeight: '150px', wordBreak: 'break-all' }}
@@ -381,7 +380,7 @@ const JwtTool = () => {
                 placeholder="Paste your JWT here..."
               />
               {!isValidToken && <small className="p-error mb-4">Invalid JWT format</small>}
-              
+
               <h3 className="m-0 text-xl font-semibold mb-3">Colorized Token</h3>
               {renderColoredToken()}
             </div>
@@ -394,7 +393,7 @@ const JwtTool = () => {
                   <span className="font-bold text-pink-500">{algorithm}</span>
                 </div>
               </div>
-              
+
               <div className="flex flex-column gap-4 flex-grow-1">
                 <div className="flex flex-column">
                   <div className="font-medium mb-2 uppercase text-sm tracking-wide" style={{ color: '#fb015b' }}>Header</div>
@@ -430,15 +429,15 @@ const JwtTool = () => {
                 <h3 className="m-0 text-xl font-semibold">Data to Encode</h3>
                 <div className="flex align-items-center">
                   <span className="font-medium mr-2">Algorithm</span>
-                  <Dropdown 
-                    value={algorithm} 
-                    options={algorithms} 
-                    onChange={(e) => handleAlgorithmChange(e.value)} 
-                    className="w-10rem font-bold" 
+                  <Dropdown
+                    value={algorithm}
+                    options={algorithms}
+                    onChange={(e) => handleAlgorithmChange(e.value)}
+                    className="w-10rem font-bold"
                   />
                 </div>
               </div>
-              
+
               <div className="flex flex-column gap-4 flex-grow-1">
                 <div className="flex flex-column">
                   <div className="font-medium mb-2 uppercase text-sm tracking-wide" style={{ color: '#fb015b' }}>Header</div>
@@ -457,13 +456,13 @@ const JwtTool = () => {
 
             <div className="col-12 lg:col-6 flex flex-column">
               <h3 className="m-0 text-xl font-semibold mb-3">Generated Token (Copy here)</h3>
-              <InputTextarea 
-                value={token} 
+              <InputTextarea
+                value={token}
                 readOnly
                 className="w-full p-3 font-code text-xl font-bold"
                 style={{ minHeight: '150px', wordBreak: 'break-all' }}
               />
-              
+
               <h3 className="m-0 text-xl font-semibold mb-3 mt-4">Colorized View</h3>
               {renderColoredToken()}
             </div>

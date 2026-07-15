@@ -42,6 +42,11 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           label: 'Text to Speech',
           icon: 'pi pi-fw pi-volume-up',
           command: () => navigate('/text-to-speech')
+        },
+        {
+          label: 'JWT',
+          icon: 'pi pi-fw pi-key',
+          command: () => navigate('/jwt-tool')
         }
       ]
     }
