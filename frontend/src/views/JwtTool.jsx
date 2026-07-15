@@ -184,6 +184,17 @@ const JwtTool = () => {
     setIsSignatureValid(sigB64 !== '' || alg === 'none');
   };
 
+  const handleReset = () => {
+    setIsDecoderMode(false);
+    setHeaderJson('{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
+    setPayloadJson('{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}');
+    setSecret('your-256-bit-secret');
+    setSecretBase64Encoded(false);
+    setPublicKey(defaultRSAPublic);
+    setPrivateKey(defaultRSAPrivate);
+    setAlgorithm('HS256'); // This will trigger the useEffect to regenerate the token
+  };
+
   // Inicializar encoder con valores por defecto
   useEffect(() => {
     updateFromDecoded(headerJson, payloadJson, algorithm, secret, secretBase64Encoded, publicKey, privateKey);
@@ -332,12 +343,15 @@ const JwtTool = () => {
   return (
     <div className="flex justify-content-center p-4">
       <div className="surface-card p-5 shadow-3 border-round w-full max-w-7xl">
-        <div className="flex align-items-center mb-4">
-          <Button icon="pi pi-arrow-left" text rounded severity="secondary" onClick={() => navigate('/')} className="mr-3" />
-          <h2 className="m-0 text-3xl font-bold flex align-items-center">
-            <i className="pi pi-shield mr-3 text-pink-500" style={{ fontSize: '2rem' }}></i>
-            JWT Encoder / Decoder
-          </h2>
+        <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4 gap-3 md:gap-0">
+          <div className="flex align-items-center">
+            <Button icon="pi pi-arrow-left" text rounded severity="secondary" onClick={() => navigate('/')} className="mr-3" />
+            <h2 className="m-0 text-2xl md:text-3xl font-bold flex align-items-center">
+              <i className="pi pi-shield mr-3 text-pink-500" style={{ fontSize: '2rem' }}></i>
+              JWT Encoder / Decoder
+            </h2>
+          </div>
+          <Button label="Reset Defaults" icon="pi pi-refresh" outlined severity="secondary" onClick={handleReset} className="align-self-start md:align-self-auto" />
         </div>
 
         <div className="flex flex-column md:flex-row md:align-items-center justify-content-between mb-5 border-bottom-1 surface-border pb-4">
