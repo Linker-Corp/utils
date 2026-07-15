@@ -2,6 +2,17 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [1.0.1] - 2026-07-14
+
+### Added
+- **JWT Encoder/Decoder Tool:** A complete interface similar to jwt.io for JSON Web Tokens.
+  - Interactive Encoder and Decoder modes with a toggle switch.
+  - Support for multiple symmetric and asymmetric algorithms (HS256, HS384, HS512, RS256, RS384, RS512, ES256, ES384, ES512, PS256, PS384, PS512).
+  - Colorized visual representation of tokens (Header, Payload, Signature).
+  - Built-in signature verification with real-time feedback.
+  - Capability to sign tokens using user-provided secrets, public, and private keys (PEM format).
+  - Mobile-responsive design integrating PrimeReact native UI components.
+
 ## [1.0.0] - 2026-07-14
 
 ### Añadido

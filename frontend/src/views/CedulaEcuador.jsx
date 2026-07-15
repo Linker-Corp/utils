@@ -117,6 +117,7 @@ const CedulaEcuador = () => {
                   max={1000}
                   showButtons
                   className="w-full"
+                  inputClassName="w-full"
                 />
               </div>
 
