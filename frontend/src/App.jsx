@@ -1,0 +1,58 @@
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import Dashboard from './views/Dashboard';
+import Base64Decoder from './views/Base64Decoder';
+import TextToSpeech from './views/TextToSpeech';
+import CedulaEcuador from './views/CedulaEcuador';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    const isDark = theme === 'dark';
+    setIsDarkMode(isDark);
+    
+    const themeLink = document.getElementById('theme-link');
+    if (themeLink) {
+      themeLink.href = isDark
+        ? '/themes/lara-dark-indigo/theme.css'
+        : '/themes/lara-light-indigo/theme.css';
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    
+    const themeLink = document.getElementById('theme-link');
+    if (themeLink) {
+      themeLink.href = newTheme
+        ? '/themes/lara-dark-indigo/theme.css'
+        : '/themes/lara-light-indigo/theme.css';
+    }
+  };
+
+  return (
+    <HashRouter>
+      <div className="flex flex-column min-h-screen">
+        <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+        <main className="flex-grow-1 p-3">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/base64-decoder" element={<Base64Decoder />} />
+            <Route path="/text-to-speech" element={<TextToSpeech />} />
+            <Route path="/cedula-ecuador" element={<CedulaEcuador />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </HashRouter>
+  );
+}
+
+export default App;
