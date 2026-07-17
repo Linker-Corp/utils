@@ -116,27 +116,59 @@ const formatRational = (value) => {
   return Number.isInteger(decimal) ? `${decimal}` : decimal.toFixed(4);
 };
 
+const formatExposureTime = (value) => (
+  value.numerator === 1 ? `1/${value.denominator} s` : `${formatRational(value)} s`
+);
+
+const formatFiniteRational = (value, formatter) => {
+  const number = rationalToNumber(value);
+  return Number.isFinite(number) ? formatter(number) : formatRational(value);
+};
+
+const RATIONAL_FORMATTERS = {
+  0x829a: formatExposureTime,
+  0x829d: (value) => formatFiniteRational(value, (number) => `f/${number.toFixed(1)}`),
+  0x920a: (value) => formatFiniteRational(value, (number) => `${number.toFixed(1)} mm`),
+  0x9204: (value) => formatFiniteRational(value, (number) => `${number.toFixed(2)} EV`)
+};
+
+const GPS_RATIONAL_FORMATTERS = {
+  0x0006: (value) => formatFiniteRational(value, (number) => `${number.toFixed(2)} m`)
+};
+
+const VALUE_LABELS = {
+  0x0112: ORIENTATION,
+  0x9207: METERING_MODE,
+  0xa403: WHITE_BALANCE,
+  0xa406: SCENE_CAPTURE
+};
+
+const SIMPLE_FORMATTERS = {
+  0x9209: (value) => (Number(value) === 0 ? 'No disparado' : `Disparado (${value})`),
+  0x0128: (value) => (Number(value) === 2 ? 'Pulgadas' : String(value))
+};
+
+const formatArrayValue = (value) => (
+  value.map((item) => (isRational(item) ? formatRational(item) : String(item))).join(', ')
+);
+
+const getRationalFormatter = (tag, section) => (
+  section === 'GPS' ? GPS_RATIONAL_FORMATTERS[tag] : RATIONAL_FORMATTERS[tag]
+);
+
 const formatExifValue = (tag, value, section) => {
-  if (Array.isArray(value)) {
-    return value.map((item) => (isRational(item) ? formatRational(item) : String(item))).join(', ');
-  }
+  if (Array.isArray(value)) return formatArrayValue(value);
 
   if (isRational(value)) {
-    const number = rationalToNumber(value);
-    if (tag === 0x829a) return value.numerator === 1 ? `1/${value.denominator} s` : `${formatRational(value)} s`;
-    if (tag === 0x829d) return Number.isFinite(number) ? `f/${number.toFixed(1)}` : formatRational(value);
-    if (tag === 0x920a) return Number.isFinite(number) ? `${number.toFixed(1)} mm` : formatRational(value);
-    if (tag === 0x9204) return Number.isFinite(number) ? `${number.toFixed(2)} EV` : formatRational(value);
-    if (tag === 0x0006 && section === 'GPS') return Number.isFinite(number) ? `${number.toFixed(2)} m` : formatRational(value);
-    return formatRational(value);
+    const formatter = getRationalFormatter(tag, section);
+    return formatter ? formatter(value) : formatRational(value);
   }
 
-  if (tag === 0x0112) return ORIENTATION[value] || String(value);
-  if (tag === 0x9207) return METERING_MODE[value] || String(value);
-  if (tag === 0xa403) return WHITE_BALANCE[value] || String(value);
-  if (tag === 0xa406) return SCENE_CAPTURE[value] || String(value);
-  if (tag === 0x9209) return Number(value) === 0 ? 'No disparado' : `Disparado (${value})`;
-  if (tag === 0x0128) return Number(value) === 2 ? 'Pulgadas' : String(value);
+  const labels = VALUE_LABELS[tag];
+  if (labels) return labels[value] || String(value);
+
+  const formatter = SIMPLE_FORMATTERS[tag];
+  if (formatter) return formatter(value);
 
   return String(value);
 };
