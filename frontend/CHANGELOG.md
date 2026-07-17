@@ -2,6 +2,17 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [1.0.2] - 2026-07-16
+
+### Added
+- **Photo Metadata Tool:** Nueva herramienta interactiva para extraer y visualizar metadatos EXIF de fotografías e imágenes.
+  - Soporte para analizar imágenes y leer metadatos detallados (dispositivo, ubicación GPS, fechas, parámetros de la cámara, etc.).
+  - Vista amigable para la información y mapa interactivo integrado para datos de geolocalización.
+  - Interfaz moderna y responsiva utilizando componentes nativos de PrimeReact.
+
+### Changed
+- **JWT Tool:** Mejoras y optimizaciones generales en la herramienta.
+
 ## [1.0.1] - 2026-07-14
 
 ### Added

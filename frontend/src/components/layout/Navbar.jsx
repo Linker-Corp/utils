@@ -47,6 +47,17 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           label: 'JWT',
           icon: 'pi pi-fw pi-key',
           command: () => navigate('/jwt-tool')
+        },
+        {
+          label: 'Fotografía',
+          icon: 'pi pi-fw pi-camera',
+          items: [
+            {
+              label: 'Metadata',
+              icon: 'pi pi-fw pi-image',
+              command: () => navigate('/photo-metadata')
+            }
+          ]
         }
       ]
     }
