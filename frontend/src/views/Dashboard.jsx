@@ -29,9 +29,11 @@ const Dashboard = () => {
               <div className="flex flex-column gap-3 mt-auto border-top-1 surface-border pt-4">
                 <span className="text-sm font-semibold text-color-secondary uppercase tracking-wide">Herramientas Disponibles</span>
                 
-                <div 
-                  className="p-3 border-round-xl surface-50 hover:surface-100 cursor-pointer transition-colors transition-duration-200 flex align-items-center border-1 surface-border"
+                <button 
+                  type="button"
+                  className="p-3 border-round-xl surface-50 hover:surface-100 cursor-pointer transition-colors transition-duration-200 flex align-items-center border-1 surface-border w-full text-left font-family-inherit"
                   onClick={() => navigate('/base64-decoder')}
+                  style={{ appearance: 'none', background: 'none' }}
                 >
                   <div className="flex align-items-center justify-content-center bg-indigo-100 border-round p-2 mr-3">
                     <i className="pi pi-file-excel text-xl text-indigo-600"></i>
@@ -41,7 +43,7 @@ const Dashboard = () => {
                     <span className="text-sm text-color-secondary">xls, xlsx, csv</span>
                   </div>
                   <i className="pi pi-angle-right text-color-secondary"></i>
-                </div>
+                </button>
               </div>
             </div>
           </div>
