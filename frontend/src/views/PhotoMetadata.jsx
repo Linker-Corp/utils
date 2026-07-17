@@ -178,7 +178,7 @@ const readAscii = (view, start, length) => {
   for (let i = 0; i < length; i += 1) {
     const charCode = view.getUint8(start + i);
     if (charCode === 0) break;
-    text += String.fromCharCode(charCode);
+    text += String.fromCodePoint(charCode);
   }
   return text.trim();
 };
@@ -289,6 +289,28 @@ const extractGps = (rows) => {
   };
 };
 
+const parseExifSegment = (view, segmentStart) => {
+  const tiffStart = segmentStart + 6;
+  const byteOrder = readAscii(view, tiffStart, 2);
+  const littleEndian = byteOrder === 'II';
+
+  if (!littleEndian && byteOrder !== 'MM') {
+    return { rows: [], gps: null, warning: 'El bloque EXIF tiene un orden de bytes no reconocido.' };
+  }
+
+  const firstIfdOffset = view.getUint32(tiffStart + 4, littleEndian);
+  const primary = parseIfd(view, tiffStart, firstIfdOffset, littleEndian, 'Imagen');
+  const exif = parseIfd(view, tiffStart, primary.pointers.exif, littleEndian, 'Camara');
+  const gps = parseIfd(view, tiffStart, primary.pointers.gps, littleEndian, 'GPS');
+  const rows = [...primary.rows, ...exif.rows, ...gps.rows];
+
+  return {
+    rows,
+    gps: extractGps(gps.rows),
+    warning: rows.length ? null : 'No se encontraron campos EXIF legibles en esta fotografía.'
+  };
+};
+
 const parseExif = (arrayBuffer) => {
   const view = new DataView(arrayBuffer);
 
@@ -314,25 +336,7 @@ const parseExif = (arrayBuffer) => {
     if (segmentLength < 2 || offset + 2 + segmentLength > view.byteLength) break;
 
     if (marker === 0xe1 && readAscii(view, segmentStart, 6) === 'Exif') {
-      const tiffStart = segmentStart + 6;
-      const byteOrder = readAscii(view, tiffStart, 2);
-      const littleEndian = byteOrder === 'II';
-
-      if (!littleEndian && byteOrder !== 'MM') {
-        return { rows: [], gps: null, warning: 'El bloque EXIF tiene un orden de bytes no reconocido.' };
-      }
-
-      const firstIfdOffset = view.getUint32(tiffStart + 4, littleEndian);
-      const primary = parseIfd(view, tiffStart, firstIfdOffset, littleEndian, 'Imagen');
-      const exif = parseIfd(view, tiffStart, primary.pointers.exif, littleEndian, 'Camara');
-      const gps = parseIfd(view, tiffStart, primary.pointers.gps, littleEndian, 'GPS');
-      const rows = [...primary.rows, ...exif.rows, ...gps.rows];
-
-      return {
-        rows,
-        gps: extractGps(gps.rows),
-        warning: rows.length ? null : 'No se encontraron campos EXIF legibles en esta fotografía.'
-      };
+      return parseExifSegment(view, segmentStart);
     }
 
     offset += 2 + segmentLength;
@@ -497,7 +501,7 @@ const PhotoMetadata = () => {
             <Button icon="pi pi-arrow-left" text rounded severity="secondary" onClick={() => navigate('/')} className="mr-3" />
             <h2 className="m-0 text-2xl md:text-3xl font-bold flex align-items-center">
               <i className="pi pi-camera mr-3 text-cyan-500" style={{ fontSize: '2rem' }}></i>
-              Metadata de Fotografía
+              <span>Metadata de Fotografía</span>
             </h2>
           </div>
 
@@ -578,7 +582,7 @@ const PhotoMetadata = () => {
                 <div className="surface-50 border-round p-4 mb-4">
                   <h3 className="mt-0 mb-3 text-xl flex align-items-center">
                     <i className="pi pi-map-marker mr-2 text-cyan-500"></i>
-                    Ubicación GPS
+                    <span>Ubicación GPS</span>
                   </h3>
                   <div className="grid">
                     <div className="col-12 md:col-4"><span className="font-semibold">Latitud:</span> <span className="text-color-secondary">{gpsInfo.latitude}</span></div>
