@@ -11,69 +11,43 @@ import CryptoJS from 'crypto-js';
 
 // Default Keys
 const defaultRSAPrivate = `-----BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAtzY3O3f5qX5zB5M3yP3B5d7n6qJ6y4nJ0aZ8g5zC0n2n7e6X
-Y5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1c
-M8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qR5zC0n2n7e
-6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD
-1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qR5zC0n2n
-7e6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2
-aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qQIDAQAB
-AoIBAF5Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X
-4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qR5zC0n2n7e6XY
-5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM
-8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qR5zC0n2n7e6
-XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1
-cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qQKBgQDzB3c
-T0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3y
-M1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qR5zC0n2n7e6XY5gH6kF2B1Q8aT1M7T7zB
-3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO
-3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9pM6qQKBgQDW6Y0xQ9U7cT5r4V3aJ2W0tG9R
-1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y9p
-M6qR5zC0n2n7e6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7cT5r4V3aJ2W0tG
-9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9zB3fX6cK0tI4Y
-9pM6qQKBgQDhK0wI9X3dG1e8/sM9rL0J2O+jZ9iN2iV2E6mO9a5o2tM8tT5r/s9s
-1tP3n1vQ6G2hE6qO3oG6rZ1iG1bU5sW3wW0G+e0V4dZ2rQ6tX7iN3nQ5G1zL/W+K
-5lV9rI0nS2sV8H3O5jP4qM6tQ7uR3hI9oX9zO5vQ0gM2tY9rL0J2O+jZ9iN2iV2E
-6mO9a5o2tM8tT5r/s9s1tP3n1vQ6G2hE6qO3oG6rZ1iG1bU5sW3wW0G+e0V4dZ2r
-Q6tX7iN3nQ5G1zL/W+K5lV9rI0nS2sV8H3QKBgQC3Njc7d/mpfnMHkzfI/cHl3ufq
-onrLicnRpnyDnMLSfafu7pdjmAfqQXYHVDxpPUztPvMHdxPR5bpjTFD1TtxPmvhX
-donZbS0b1HW4vqQ/czZoPVwzxfhDawjd4bQvlpPtHSM7fIzVpbtXxw3lsv3MHd9f
-pwrS0jhj2kzqpHnMLSfafu7pdjmAfqQXYHVDxpPUztPvMHdxPR5bpjTFD1TtxPmv
-hXdonZbS0b1HW4vqQKBgQC3Njc7d/mpfnMHkzfI/cHl3ufqonrLicnRpnyDnMLSf
-afu7pdjmAfqQXYHVDxpPUztPvMHdxPR5bpjTFD1TtxPmvhXdonZbS0b1HW4vqQ/c
-zZoPVwzxfhDawjd4bQvlpPtHSM7fIzVpbtXxw3lsv3MHd9fpwrS0jhj2kzqpHnML
-Sfafu7pdjmAfqQXYHVDxpPUztPvMHdxPR5bpjTFD1TtxPmvhXdonZbS0b1HW4v
+(Replace with your actual private key)
 -----END RSA PRIVATE KEY-----`;
 
 const defaultRSAPublic = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzY3O3f5qX5zB5M3yP3B
-5d7n6qJ6y4nJ0aZ8g5zC0n2n7e6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U7c
-T5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5bL9
-zB3fX6cK0tI4Y9pM6qR5zC0n2n7e6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ9U
-7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN5b
-L9zB3fX6cK0tI4Y9pM6qR5zC0n2n7e6XY5gH6kF2B1Q8aT1M7T7zB3cT0eW6Y0xQ
-9U7cT5r4V3aJ2W0tG9R1uL6kP3M2aD1cM8X4Q2sI3eG0L5aT7R0jO3yM1aW7V8cN
-5bL9zB3fX6cK0tI4Y9pM6qQIDAQAB
+(Replace with your actual public key)
 -----END PUBLIC KEY-----`;
 
 // Helper base64url utils
 const toBase64Url = (str) => {
   try {
-    const base64 = btoa(unescape(encodeURIComponent(str)));
-    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCodePoint(bytes[i]);
+    }
+    const base64 = btoa(binary);
+    return base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
   } catch (e) {
+    console.error('Encoding error:', e);
     return '';
   }
 };
 
 const fromBase64Url = (str) => {
   try {
-    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    let base64 = str.replaceAll('-', '+').replaceAll('_', '/');
     while (base64.length % 4) {
       base64 += '=';
     }
-    return decodeURIComponent(escape(atob(base64)));
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.codePointAt(i);
+    }
+    return new TextDecoder().decode(bytes);
   } catch (e) {
+    console.error('Decoding error:', e);
     return '';
   }
 };
@@ -110,39 +84,82 @@ const JwtTool = () => {
   const [publicKey, setPublicKey] = useState(defaultRSAPublic);
   const [privateKey, setPrivateKey] = useState(defaultRSAPrivate);
 
+  const [publicKeyFormat, setPublicKeyFormat] = useState('PEM');
+  const [privateKeyFormat, setPrivateKeyFormat] = useState('PEM');
+
   const [isSignatureValid, setIsSignatureValid] = useState(true);
   const [isValidToken, setIsValidToken] = useState(true);
 
   const isAsymmetric = algorithm.startsWith('RS') || algorithm.startsWith('ES') || algorithm.startsWith('PS');
 
-  // Funciones de firma y verificación adaptadas a jsrsasign
+  const createHmacSignature = (hJson, pJson, alg, sec, secB64) => {
+    let usedSecret = sec;
+    if (secB64) {
+      try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { console.error('Parse error:', e); }
+    }
+    const data = toBase64Url(hJson) + '.' + toBase64Url(pJson);
+    let hash;
+    if (alg === 'HS256') hash = CryptoJS.HmacSHA256(data, usedSecret);
+    else if (alg === 'HS384') hash = CryptoJS.HmacSHA384(data, usedSecret);
+    else if (alg === 'HS512') hash = CryptoJS.HmacSHA512(data, usedSecret);
+    else return '';
+    let base64 = CryptoJS.enc.Base64.stringify(hash);
+    return base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+  };
+
+  const createAsymmetricSignature = (hJson, pJson, alg, privKey) => {
+    const hObj = JSON.parse(hJson);
+    const pObj = JSON.parse(pJson);
+    let keyInput = privKey;
+    if (privKey.trim().startsWith('{')) {
+      try {
+        keyInput = JSON.parse(privKey);
+      } catch (e) { console.error('Parse error:', e); }
+    }
+    const key = KEYUTIL.getKey(keyInput);
+    const jwt = KJUR.jws.JWS.sign(alg, JSON.stringify(hObj), JSON.stringify(pObj), key);
+    return jwt.split('.')[2] || '';
+  };
+
   const createSignature = (hJson, pJson, alg, sec, secB64, privKey) => {
     if (alg === 'none') return '';
     try {
       if (alg.startsWith('HS')) {
-        let usedSecret = sec;
-        if (secB64) {
-          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { }
-        }
-        const hB64 = toBase64Url(hJson);
-        const pB64 = toBase64Url(pJson);
-        const data = hB64 + '.' + pB64;
-        let hash;
-        if (alg === 'HS256') hash = CryptoJS.HmacSHA256(data, usedSecret);
-        if (alg === 'HS384') hash = CryptoJS.HmacSHA384(data, usedSecret);
-        if (alg === 'HS512') hash = CryptoJS.HmacSHA512(data, usedSecret);
-        let base64 = CryptoJS.enc.Base64.stringify(hash);
-        return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-      } else {
-        const hObj = JSON.parse(hJson);
-        const pObj = JSON.parse(pJson);
-        const key = KEYUTIL.getKey(privKey);
-        const jwt = KJUR.jws.JWS.sign(alg, JSON.stringify(hObj), JSON.stringify(pObj), key);
-        return jwt.split('.')[2] || '';
+        return createHmacSignature(hJson, pJson, alg, sec, secB64);
       }
+      return createAsymmetricSignature(hJson, pJson, alg, privKey);
     } catch (err) {
+      console.error('Signature creation error:', err);
       return '';
     }
+  };
+
+  const verifyHmacSignature = (jwt, alg, sec, secB64) => {
+    const parts = jwt.split('.');
+    if (parts.length !== 3) return false;
+    let usedSecret = sec;
+    if (secB64) {
+      try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { console.error('Parse error:', e); }
+    }
+    const data = parts[0] + '.' + parts[1];
+    let hash;
+    if (alg === 'HS256') hash = CryptoJS.HmacSHA256(data, usedSecret);
+    else if (alg === 'HS384') hash = CryptoJS.HmacSHA384(data, usedSecret);
+    else if (alg === 'HS512') hash = CryptoJS.HmacSHA512(data, usedSecret);
+    else return false;
+    let expectedBase64 = CryptoJS.enc.Base64.stringify(hash).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+    return expectedBase64 === parts[2];
+  };
+
+  const verifyAsymmetricSignature = (jwt, alg, pubKey) => {
+    let keyInput = pubKey;
+    if (pubKey.trim().startsWith('{')) {
+      try {
+        keyInput = JSON.parse(pubKey);
+      } catch (e) { console.error('Parse error:', e); }
+    }
+    const key = KEYUTIL.getKey(keyInput);
+    return KJUR.jws.JWS.verify(jwt, key, [alg]);
   };
 
   const verifySignature = (jwt, alg, sec, secB64, pubKey) => {
@@ -152,24 +169,11 @@ const JwtTool = () => {
     }
     try {
       if (alg.startsWith('HS')) {
-        const parts = jwt.split('.');
-        if (parts.length !== 3) return false;
-        let usedSecret = sec;
-        if (secB64) {
-          try { usedSecret = CryptoJS.enc.Base64.parse(sec); } catch (e) { }
-        }
-        const data = parts[0] + '.' + parts[1];
-        let hash;
-        if (alg === 'HS256') hash = CryptoJS.HmacSHA256(data, usedSecret);
-        if (alg === 'HS384') hash = CryptoJS.HmacSHA384(data, usedSecret);
-        if (alg === 'HS512') hash = CryptoJS.HmacSHA512(data, usedSecret);
-        let expectedBase64 = CryptoJS.enc.Base64.stringify(hash).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-        return expectedBase64 === parts[2];
-      } else {
-        const key = KEYUTIL.getKey(pubKey);
-        return KJUR.jws.JWS.verifyJWT(jwt, key, { alg: [alg] });
+        return verifyHmacSignature(jwt, alg, sec, secB64);
       }
+      return verifyAsymmetricSignature(jwt, alg, pubKey);
     } catch (err) {
+      console.error('Signature verification error:', err);
       return false;
     }
   };
@@ -206,7 +210,47 @@ const JwtTool = () => {
       const hObj = JSON.parse(headerJson);
       hObj.alg = newAlg;
       setHeaderJson(JSON.stringify(hObj, null, 2));
-    } catch (e) { }
+    } catch (e) {
+      console.error('JSON parse error:', e);
+    }
+  };
+
+  const applyJwk = (keys, kid, newToken, currentAlg) => {
+    const key = keys.find(k => k.kid === kid);
+    if (key) {
+      const keyStr = JSON.stringify(key, null, 2);
+      setPublicKey(keyStr);
+      setPublicKeyFormat('JWK');
+      setIsSignatureValid(verifySignature(newToken, currentAlg, secret, secretBase64Encoded, keyStr));
+    }
+  };
+
+  const fetchJwk = async (iss, kid, newToken, currentAlg) => {
+    const fetchUrl = iss.endsWith('/') ? `${iss}protocol/openid-connect/certs` : `${iss}/protocol/openid-connect/certs`;
+    try {
+      const res = await fetch(fetchUrl);
+      if (!res.ok) throw new Error('Not ok');
+      const data = await res.json();
+      if (data?.keys) {
+        applyJwk(data.keys, kid, newToken, currentAlg);
+        return;
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+    }
+
+    const fallbackUrl = iss.endsWith('/') ? `${iss}.well-known/jwks.json` : `${iss}/.well-known/jwks.json`;
+    try {
+      const res = await fetch(fallbackUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.keys) {
+          applyJwk(data.keys, kid, newToken, currentAlg);
+        }
+      }
+    } catch (e) {
+      console.error('Could not auto-fetch JWK', e);
+    }
   };
 
   const handleTokenChange = (e) => {
@@ -214,38 +258,57 @@ const JwtTool = () => {
     setToken(newToken);
 
     const parts = newToken.split('.');
-    if (parts.length >= 2) {
-      const hStr = fromBase64Url(parts[0]);
-      const pStr = fromBase64Url(parts[1]);
+    if (parts.length < 2) {
+      setIsValidToken(false);
+      return;
+    }
 
-      let currentAlg = algorithm;
-      try {
-        const hObj = JSON.parse(hStr);
-        setHeaderJson(JSON.stringify(hObj, null, 2));
-        if (hObj.alg && hObj.alg !== currentAlg && algorithms.some(a => a.value === hObj.alg)) {
-          currentAlg = hObj.alg;
-          setAlgorithm(currentAlg);
-        }
-      } catch (err) {
-        setHeaderJson(hStr);
+    const hStr = fromBase64Url(parts[0]);
+    const pStr = fromBase64Url(parts[1]);
+
+    let currentAlg = algorithm;
+    let newPubKey = publicKey;
+    let hObj = null;
+    let pObj = null;
+    
+    try {
+      hObj = JSON.parse(hStr);
+      setHeaderJson(JSON.stringify(hObj, null, 2));
+      if (hObj.alg && hObj.alg !== currentAlg && algorithms.some(a => a.value === hObj.alg)) {
+        currentAlg = hObj.alg;
+        setAlgorithm(currentAlg);
       }
-
-      try {
-        const pObj = JSON.parse(pStr);
-        setPayloadJson(JSON.stringify(pObj, null, 2));
-      } catch (err) {
-        setPayloadJson(pStr);
+      
+      // Auto-extract JWK if present in header
+      if (hObj.jwk) {
+        newPubKey = JSON.stringify(hObj.jwk, null, 2);
+        setPublicKey(newPubKey);
+        setPublicKeyFormat('JWK');
       }
+    } catch (err) {
+      console.error('Header parse error:', err);
+      setHeaderJson(hStr);
+    }
 
-      setIsValidToken(true);
+    try {
+      pObj = JSON.parse(pStr);
+      setPayloadJson(JSON.stringify(pObj, null, 2));
+    } catch (err) {
+      console.error('Payload parse error:', err);
+      setPayloadJson(pStr);
+    }
 
-      if (parts.length === 3) {
-        setIsSignatureValid(verifySignature(newToken, currentAlg, secret, secretBase64Encoded, publicKey));
-      } else {
-        setIsSignatureValid(false);
+    setIsValidToken(true);
+
+    if (parts.length === 3) {
+      setIsSignatureValid(verifySignature(newToken, currentAlg, secret, secretBase64Encoded, newPubKey));
+      
+      // Auto-fetch JWK if kid and iss are present
+      if (hObj?.kid && pObj?.iss && !hObj.jwk) {
+        fetchJwk(pObj.iss, hObj.kid, newToken, currentAlg);
       }
     } else {
-      setIsValidToken(false);
+      setIsSignatureValid(false);
     }
   };
 
@@ -310,24 +373,46 @@ const JwtTool = () => {
           ) : (
             <div className="pl-3 mt-3 mb-2 w-full">
               <div className="mb-3">
-                <label className="block mb-2 text-sm text-color-secondary font-bold">Public Key (Verification)</label>
+                <div className="flex justify-content-between align-items-center mb-2">
+                  <label htmlFor="publicKeyInput" className="block text-sm text-color-secondary font-bold m-0">Public Key (Verification)</label>
+                  <Dropdown
+                    value={publicKeyFormat}
+                    options={[{label: 'PEM', value: 'PEM'}, {label: 'JWK', value: 'JWK'}]}
+                    onChange={(e) => setPublicKeyFormat(e.value)}
+                    className="p-dropdown-sm"
+                    style={{ height: '2.5rem', display: 'flex', alignItems: 'center' }}
+                  />
+                </div>
                 <InputTextarea
+                  id="publicKeyInput"
                   value={publicKey}
                   onChange={(e) => handleDecodedChange('publicKey', e.target.value)}
-                  rows={4}
+                  rows={publicKeyFormat === 'JWK' ? 8 : 4}
                   className="w-full font-code text-sm"
                   spellCheck="false"
+                  placeholder={publicKeyFormat === 'JWK' ? '{\n  "kty": "RSA",\n  "e": "AQAB",\n  "n": "..."\n}' : '-----BEGIN PUBLIC KEY-----...'}
                 />
               </div>
               {!isDecoder && (
                 <div>
-                  <label className="block mb-2 text-sm text-color-secondary font-bold">Private Key (Signature)</label>
+                  <div className="flex justify-content-between align-items-center mb-2">
+                    <label htmlFor="privateKeyInput" className="block text-sm text-color-secondary font-bold m-0">Private Key (Signature)</label>
+                    <Dropdown
+                      value={privateKeyFormat}
+                      options={[{label: 'PEM', value: 'PEM'}, {label: 'JWK', value: 'JWK'}]}
+                      onChange={(e) => setPrivateKeyFormat(e.value)}
+                      className="p-dropdown-sm"
+                      style={{ height: '2.5rem', display: 'flex', alignItems: 'center' }}
+                    />
+                  </div>
                   <InputTextarea
+                    id="privateKeyInput"
                     value={privateKey}
                     onChange={(e) => handleDecodedChange('privateKey', e.target.value)}
-                    rows={4}
+                    rows={privateKeyFormat === 'JWK' ? 8 : 4}
                     className="w-full font-code text-sm"
                     spellCheck="false"
+                    placeholder={privateKeyFormat === 'JWK' ? '{\n  "kty": "RSA",\n  "d": "...",\n  "n": "..."\n}' : '-----BEGIN RSA PRIVATE KEY-----...'}
                   />
                 </div>
               )}
@@ -339,6 +424,16 @@ const JwtTool = () => {
     );
   };
 
+  const renderSignatureStatus = () => {
+    if (algorithm === 'none') {
+      return <span className="text-orange-500"><i className="pi pi-exclamation-triangle mr-1"></i>Unsecured (None)</span>;
+    }
+    if (isSignatureValid) {
+      return <span className="text-green-500"><i className="pi pi-check-circle mr-1"></i>Signature Verified</span>;
+    }
+    return <span className="text-red-500"><i className="pi pi-times-circle mr-1"></i>Invalid Signature</span>;
+  };
+
   return (
     <div className="flex justify-content-center p-4">
       <div className="surface-card p-5 shadow-3 border-round w-full max-w-7xl">
@@ -347,7 +442,7 @@ const JwtTool = () => {
             <Button icon="pi pi-arrow-left" text rounded severity="secondary" onClick={() => navigate('/')} className="mr-3" />
             <h2 className="m-0 text-2xl md:text-3xl font-bold flex align-items-center">
               <i className="pi pi-shield mr-3 text-pink-500" style={{ fontSize: '2rem' }}></i>
-              JWT Encoder / Decoder
+              <span>JWT Encoder / Decoder</span>
             </h2>
           </div>
           <Button label="Reset Defaults" icon="pi pi-refresh" outlined severity="secondary" onClick={handleReset} className="align-self-start md:align-self-auto" />
@@ -406,15 +501,7 @@ const JwtTool = () => {
                 <div className="flex flex-column">
                   <div className="font-medium mb-2 uppercase text-sm tracking-wide flex justify-content-between" style={{ color: '#00b9f1' }}>
                     <span>Verify Signature</span>
-                    {algorithm !== 'none' ? (
-                      isSignatureValid ? (
-                        <span className="text-green-500"><i className="pi pi-check-circle mr-1"></i>Signature Verified</span>
-                      ) : (
-                        <span className="text-red-500"><i className="pi pi-times-circle mr-1"></i>Invalid Signature</span>
-                      )
-                    ) : (
-                      <span className="text-orange-500"><i className="pi pi-exclamation-triangle mr-1"></i>Unsecured (None)</span>
-                    )}
+                    {renderSignatureStatus()}
                   </div>
                   {algorithm !== 'none' && renderSignatureConfig(true)}
                 </div>

@@ -15,7 +15,7 @@ const Dashboard = () => {
       <div className="grid justify-content-center gap-4 w-full max-w-5xl">
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
-            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3" style={{ backgroundColor: 'var(--indigo-500)', color: '#ffffff', minHeight: '10rem' }}>
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--indigo-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-code" style={{ fontSize: '4rem' }}></i>
             </div>
             
@@ -49,7 +49,7 @@ const Dashboard = () => {
 
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
-            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3" style={{ backgroundColor: 'var(--teal-500)', color: '#ffffff', minHeight: '10rem' }}>
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--teal-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-volume-up" style={{ fontSize: '4rem' }}></i>
             </div>
             
@@ -75,7 +75,7 @@ const Dashboard = () => {
 
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
-            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3" style={{ backgroundColor: 'var(--orange-500)', color: '#ffffff', minHeight: '10rem' }}>
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--orange-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-id-card" style={{ fontSize: '4rem' }}></i>
             </div>
             
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
-            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3" style={{ backgroundColor: 'var(--pink-500)', color: '#ffffff', minHeight: '10rem' }}>
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--pink-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-shield" style={{ fontSize: '4rem' }}></i>
             </div>
             
@@ -127,7 +127,7 @@ const Dashboard = () => {
 
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
-            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3" style={{ backgroundColor: 'var(--cyan-500)', color: '#ffffff', minHeight: '10rem' }}>
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--cyan-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-camera" style={{ fontSize: '4rem' }}></i>
             </div>
             
