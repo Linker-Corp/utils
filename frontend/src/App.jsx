@@ -6,6 +6,7 @@ import Base64Decoder from './views/Base64Decoder';
 import TextToSpeech from './views/TextToSpeech';
 import CedulaEcuador from './views/CedulaEcuador';
 import JwtTool from './views/JwtTool';
+import PhotoMetadata from './views/PhotoMetadata';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route path="/text-to-speech" element={<TextToSpeech />} />
             <Route path="/cedula-ecuador" element={<CedulaEcuador />} />
             <Route path="/jwt-tool" element={<JwtTool />} />
+            <Route path="/photo-metadata" element={<PhotoMetadata />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
