@@ -129,6 +129,31 @@ const Dashboard = () => {
 
         <div className="col-12">
           <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
+            <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--purple-500)', color: '#ffffff', minHeight: '10rem' }}>
+              <i className="pi pi-sliders-h" style={{ fontSize: '4rem' }}></i>
+            </div>
+            
+            <div className="flex flex-column p-4 md:p-5 flex-grow-1">
+              <div className="text-2xl font-bold mb-1">Background Remover</div>
+              <div className="text-color-secondary mb-3 font-medium">Fondos, color solido y PNG</div>
+              <p className="m-0 mb-4 line-height-3 text-color-secondary">
+                Remueve fondos planos, convierte la imagen a un solo color y exporta una version PNG con transparencia o fondo solido.
+              </p>
+              <div className="mt-auto">
+                <Button
+                  label="Abrir Herramienta"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  className="w-full md:w-auto"
+                  onClick={() => navigate('/background-remover')}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-12">
+          <div className="surface-card shadow-3 hover:shadow-6 transition-duration-300 border-round flex flex-column md:flex-row overflow-hidden w-full h-full">
             <div className="flex justify-content-center align-items-center p-5 md:w-4 lg:w-3 flex-shrink-0" style={{ backgroundColor: 'var(--cyan-500)', color: '#ffffff', minHeight: '10rem' }}>
               <i className="pi pi-camera" style={{ fontSize: '4rem' }}></i>
             </div>

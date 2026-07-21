@@ -53,6 +53,11 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           icon: 'pi pi-fw pi-camera',
           items: [
             {
+              label: 'Background Remover',
+              icon: 'pi pi-fw pi-sliders-h',
+              command: () => navigate('/background-remover')
+            },
+            {
               label: 'Metadata',
               icon: 'pi pi-fw pi-image',
               command: () => navigate('/photo-metadata')

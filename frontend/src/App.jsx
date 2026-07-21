@@ -7,6 +7,7 @@ import TextToSpeech from './views/TextToSpeech';
 import CedulaEcuador from './views/CedulaEcuador';
 import JwtTool from './views/JwtTool';
 import PhotoMetadata from './views/PhotoMetadata';
+import BackgroundRemover from './views/BackgroundRemover';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
             <Route path="/cedula-ecuador" element={<CedulaEcuador />} />
             <Route path="/jwt-tool" element={<JwtTool />} />
             <Route path="/photo-metadata" element={<PhotoMetadata />} />
+            <Route path="/background-remover" element={<BackgroundRemover />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
