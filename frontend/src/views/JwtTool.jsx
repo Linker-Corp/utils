@@ -196,6 +196,8 @@ const JwtTool = () => {
     setSecretBase64Encoded(false);
     setPublicKey(defaultRSAPublic);
     setPrivateKey(defaultRSAPrivate);
+    setPublicKeyFormat('PEM');
+    setPrivateKeyFormat('PEM');
     setAlgorithm('HS256'); // This will trigger the useEffect to regenerate the token
   };
 
@@ -316,12 +318,30 @@ const JwtTool = () => {
     let newH = headerJson, newP = payloadJson, newSec = secret, newSecB64 = secretBase64Encoded;
     let newPub = publicKey, newPriv = privateKey;
 
-    if (type === 'header') { newH = value; setHeaderJson(value); }
-    if (type === 'payload') { newP = value; setPayloadJson(value); }
-    if (type === 'secret') { newSec = value; setSecret(value); }
-    if (type === 'secretBase64Encoded') { newSecB64 = value; setSecretBase64Encoded(value); }
-    if (type === 'publicKey') { newPub = value; setPublicKey(value); }
-    if (type === 'privateKey') { newPriv = value; setPrivateKey(value); }
+    switch (type) {
+      case 'header':
+        newH = value; setHeaderJson(value);
+        break;
+      case 'payload':
+        newP = value; setPayloadJson(value);
+        break;
+      case 'secret':
+        newSec = value; setSecret(value);
+        break;
+      case 'secretBase64Encoded':
+        newSecB64 = value; setSecretBase64Encoded(value);
+        break;
+      case 'publicKey':
+        newPub = value; setPublicKey(value);
+        setPublicKeyFormat(value.trim().startsWith('{') ? 'JWK' : 'PEM');
+        break;
+      case 'privateKey':
+        newPriv = value; setPrivateKey(value);
+        setPrivateKeyFormat(value.trim().startsWith('{') ? 'JWK' : 'PEM');
+        break;
+      default:
+        break;
+    }
 
     updateFromDecoded(newH, newP, algorithm, newSec, newSecB64, newPub, newPriv);
   };
@@ -380,6 +400,7 @@ const JwtTool = () => {
                     options={[{label: 'PEM', value: 'PEM'}, {label: 'JWK', value: 'JWK'}]}
                     onChange={(e) => setPublicKeyFormat(e.value)}
                     className="p-dropdown-sm"
+                    disabled={isDecoder}
                     style={{ height: '2.5rem', display: 'flex', alignItems: 'center' }}
                   />
                 </div>
