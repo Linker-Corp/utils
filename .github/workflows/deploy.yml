@@ -236,6 +236,6 @@ jobs:
         uses: slackapi/slack-github-action@v4.0.0
         continue-on-error: true
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL || secrets.SLACK_WEBHOOK_PUBLIC_URL }}
+          webhook: ${{ secrets.SLACK_WEBHOOK_PUBLIC_URL }}
           webhook-type: incoming-webhook
           payload-file-path: ${{ steps.slack-payload.outputs.payload-path }}
