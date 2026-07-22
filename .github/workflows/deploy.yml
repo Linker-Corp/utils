@@ -77,6 +77,86 @@ jobs:
         with:
           path: './frontend/dist'
 
+  sonarcloud:
+    name: SonarCloud status
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    if: always()
+    outputs:
+      bugs: ${{ steps.sonar.outputs.bugs }}
+      code_smells: ${{ steps.sonar.outputs.code_smells }}
+      coverage: ${{ steps.sonar.outputs.coverage }}
+      dashboard_url: ${{ steps.sonar.outputs.dashboard_url }}
+      summary: ${{ steps.sonar.outputs.summary }}
+      status: ${{ steps.sonar.outputs.status }}
+      vulnerabilities: ${{ steps.sonar.outputs.vulnerabilities }}
+    steps:
+      - name: Query SonarCloud status
+        id: sonar
+        shell: bash
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_UTILS_KEY }}
+        run: |
+          dashboard_url="https://sonarcloud.io/project/overview?id=${SONAR_PROJECT_KEY}"
+          status="not_configured"
+          summary="SonarCloud no configurado"
+          coverage="No disponible"
+          bugs="No disponible"
+          vulnerabilities="No disponible"
+          code_smells="No disponible"
+
+          if [ -z "${SONAR_TOKEN}" ] || [ -z "${SONAR_PROJECT_KEY}" ] || [ -z "${SONAR_ORGANIZATION}" ]; then
+            {
+              echo "status=${status}"
+              echo "summary=${summary}"
+              echo "dashboard_url=${dashboard_url}"
+              echo "coverage=${coverage}"
+              echo "bugs=${bugs}"
+              echo "vulnerabilities=${vulnerabilities}"
+              echo "code_smells=${code_smells}"
+            } >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          quality_response="$(curl --fail --silent --show-error -u "${SONAR_TOKEN}:" --get "https://sonarcloud.io/api/qualitygates/project_status" --data-urlencode "projectKey=${SONAR_PROJECT_KEY}" 2>/tmp/sonar-quality-error)"
+          quality_exit=$?
+
+          if [ "${quality_exit}" -ne 0 ]; then
+            status="unavailable"
+            summary="No se pudo consultar SonarCloud"
+          else
+            status="$(echo "${quality_response}" | jq -r '.projectStatus.status // "unknown"')"
+            summary="Quality Gate: ${status}"
+          fi
+
+          measures_response="$(curl --fail --silent --show-error -u "${SONAR_TOKEN}:" --get "https://sonarcloud.io/api/measures/component" --data-urlencode "component=${SONAR_PROJECT_KEY}" --data-urlencode "metricKeys=coverage,bugs,vulnerabilities,code_smells" 2>/tmp/sonar-measures-error)"
+          measures_exit=$?
+
+          if [ "${measures_exit}" -eq 0 ]; then
+            coverage="$(echo "${measures_response}" | jq -r '.component.measures[]? | select(.metric == "coverage") | .value' | head -n 1)"
+            bugs="$(echo "${measures_response}" | jq -r '.component.measures[]? | select(.metric == "bugs") | .value' | head -n 1)"
+            vulnerabilities="$(echo "${measures_response}" | jq -r '.component.measures[]? | select(.metric == "vulnerabilities") | .value' | head -n 1)"
+            code_smells="$(echo "${measures_response}" | jq -r '.component.measures[]? | select(.metric == "code_smells") | .value' | head -n 1)"
+          fi
+
+          coverage="${coverage:-No disponible}"
+          bugs="${bugs:-No disponible}"
+          vulnerabilities="${vulnerabilities:-No disponible}"
+          code_smells="${code_smells:-No disponible}"
+
+          {
+            echo "status=${status}"
+            echo "summary=${summary}"
+            echo "dashboard_url=${dashboard_url}"
+            echo "coverage=${coverage}"
+            echo "bugs=${bugs}"
+            echo "vulnerabilities=${vulnerabilities}"
+            echo "code_smells=${code_smells}"
+          } >> "${GITHUB_OUTPUT}"
+
   deploy:
     environment:
       name: github-pages
@@ -95,6 +175,7 @@ jobs:
     needs:
       - build
       - deploy
+      - sonarcloud
     if: always()
     steps:
       - name: Prepare Slack payload
@@ -113,6 +194,13 @@ jobs:
           COMMIT_MESSAGE: ${{ needs.build.outputs.commit_message || github.event.head_commit.message || '' }}
           COMMIT_URL: ${{ needs.build.outputs.commit_url || github.event.head_commit.url || format('{0}/commit/{1}', github.event.repository.html_url, github.sha) }}
           ACTOR: ${{ github.triggering_actor || github.actor }}
+          SONAR_STATUS: ${{ needs.sonarcloud.outputs.status || 'not_configured' }}
+          SONAR_SUMMARY: ${{ needs.sonarcloud.outputs.summary || 'SonarCloud no configurado' }}
+          SONAR_DASHBOARD_URL: ${{ needs.sonarcloud.outputs.dashboard_url || '' }}
+          SONAR_COVERAGE: ${{ needs.sonarcloud.outputs.coverage || 'No disponible' }}
+          SONAR_BUGS: ${{ needs.sonarcloud.outputs.bugs || 'No disponible' }}
+          SONAR_VULNERABILITIES: ${{ needs.sonarcloud.outputs.vulnerabilities || 'No disponible' }}
+          SONAR_CODE_SMELLS: ${{ needs.sonarcloud.outputs.code_smells || 'No disponible' }}
         run: |
           node <<'NODE'
           const fs = require("fs");
@@ -126,6 +214,8 @@ jobs:
           const executionColor = successful ? "#2eb67d" : "#e01e5a";
           const buildColor = buildResult === "success" ? "#2eb67d" : "#e01e5a";
           const deployColor = deployResult === "success" ? "#2eb67d" : "#e01e5a";
+          const sonarStatus = env.SONAR_STATUS || "not_configured";
+          const sonarColor = sonarStatus === "OK" ? "#2eb67d" : sonarStatus === "not_configured" ? "#ecb22e" : "#e01e5a";
           const shortSha = (env.SHORT_SHA || "").slice(0, 7) || "No disponible";
 
           const escapeSlack = (value, fallback = "No disponible") => {
@@ -234,6 +324,39 @@ jobs:
                       type: "mrkdwn",
                       text: `*Deploy:* ${escapeSlack(deployResult)}`,
                     },
+                  },
+                ],
+              },
+              {
+                color: sonarColor,
+                blocks: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: `*SonarCloud:* ${link(env.SONAR_DASHBOARD_URL, sonarStatus)}\n*${escapeSlack(env.SONAR_SUMMARY)}`,
+                    },
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: `*Cobertura:*\n${escapeSlack(env.SONAR_COVERAGE)}`,
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Bugs:*\n${escapeSlack(env.SONAR_BUGS)}`,
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Vulnerabilidades:*\n${escapeSlack(env.SONAR_VULNERABILITIES)}`,
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Code Smells:*\n${escapeSlack(env.SONAR_CODE_SMELLS)}`,
+                      },
+                    ],
                   },
                 ],
               },
