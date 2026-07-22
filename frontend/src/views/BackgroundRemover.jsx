@@ -25,10 +25,10 @@ const parseHexColor = (value) => {
 };
 
 const colorDistance = (red, green, blue, target) => (
-  Math.sqrt(
-    ((red - target[0]) ** 2)
-    + ((green - target[1]) ** 2)
-    + ((blue - target[2]) ** 2)
+  Math.hypot(
+    red - target[0],
+    green - target[1],
+    blue - target[2]
   )
 );
 
@@ -483,7 +483,7 @@ const BackgroundRemover = () => {
                 <div className="flex flex-column gap-4">
                   <label className="flex align-items-center gap-2 font-medium">
                     <input type="checkbox" checked={removeBackground} onChange={(event) => setRemoveBackground(event.target.checked)} />
-                    Remover fondo
+                    <span>Remover fondo</span>
                   </label>
 
                   {removeBackground && (
@@ -528,7 +528,7 @@ const BackgroundRemover = () => {
 
                   <label className="flex align-items-center gap-2 font-medium">
                     <input type="checkbox" checked={makeMonochrome} onChange={(event) => setMakeMonochrome(event.target.checked)} />
-                    Convertir a un solo color
+                    <span>Convertir a un solo color</span>
                   </label>
 
                   {makeMonochrome && (
@@ -543,14 +543,14 @@ const BackgroundRemover = () => {
 
                       <label className="flex align-items-center gap-2 text-color-secondary">
                         <input type="checkbox" checked={useLumaAlpha} onChange={(event) => setUseLumaAlpha(event.target.checked)} />
-                        Usar luminosidad como detalle de opacidad
+                        <span>Usar luminosidad como detalle de opacidad</span>
                       </label>
                     </>
                   )}
 
                   <label className="flex align-items-center gap-2 font-medium">
                     <input type="checkbox" checked={solidBackground} onChange={(event) => setSolidBackground(event.target.checked)} />
-                    Poner fondo solido
+                    <span>Poner fondo solido</span>
                   </label>
 
                   {solidBackground && (
@@ -565,7 +565,7 @@ const BackgroundRemover = () => {
 
                   <label className="flex align-items-center gap-2 font-medium">
                     <input type="checkbox" checked={trim} onChange={(event) => setTrim(event.target.checked)} />
-                    Recortar margenes transparentes
+                    <span>Recortar margenes transparentes</span>
                   </label>
 
                   {trim && (
