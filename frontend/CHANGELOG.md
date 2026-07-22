@@ -2,6 +2,20 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [1.0.3] - 2026-07-21
+
+### Added
+- **Background Remover Tool:** Nueva herramienta interactiva para remover fondos y preparar imagenes desde el navegador.
+  - Permite remover fondos planos de forma automatica usando el color detectado en los bordes de la imagen.
+  - Soporte para elegir manualmente el color de fondo a remover y ajustar la tolerancia del recorte.
+  - Opcion para convertir la imagen completa a un solo color configurable.
+  - Opcion para agregar un fondo solido despues de remover el fondo original.
+  - Exportacion directa a PNG con transparencia o fondo final aplicado.
+
+### Changed
+- **Background Remover Tool:** Mejora del algoritmo de remocion de fondo con tolerancia mas alta por defecto, suavizado de bordes y regeneracion automatica de la previsualizacion al cambiar opciones.
+- **Navigation:** Se agrego acceso a Background Remover desde el dashboard y el menu de herramientas de fotografia.
+
 ## [1.0.2] - 2026-07-16
 
 ### Added
