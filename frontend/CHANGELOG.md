@@ -11,6 +11,7 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - Opcion para convertir la imagen completa a un solo color configurable.
   - Opcion para agregar un fondo solido despues de remover el fondo original.
   - Exportacion directa a PNG con transparencia o fondo final aplicado.
+  - **Workflows de CI/CD y notificaciones**: Configuración de `deploy.yml` para despliegues en GitHub Pages y `branch-build-notifications.yml` para builds de ramas, ambos con notificaciones a Slack y estado de SonarCloud.
 
 ### Changed
 - **Background Remover Tool:** Mejora del algoritmo de remocion de fondo con tolerancia mas alta por defecto, suavizado de bordes y regeneracion automatica de la previsualizacion al cambiar opciones.
