@@ -246,7 +246,7 @@ jobs:
           NODE
 
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v4.0.0
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d
         continue-on-error: true
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_PUBLIC_URL }}
