@@ -123,7 +123,9 @@ jobs:
           const deployResult = env.DEPLOY_RESULT || "unknown";
           const successful = buildResult === "success" && deployResult === "success";
           const status = successful ? "Despliegue correcto" : `Despliegue fallido (build: ${buildResult}, deploy: ${deployResult})`;
-          const color = successful ? "good" : "danger";
+          const executionColor = successful ? "#2eb67d" : "#e01e5a";
+          const buildColor = buildResult === "success" ? "#2eb67d" : "#e01e5a";
+          const deployColor = deployResult === "success" ? "#2eb67d" : "#e01e5a";
           const shortSha = (env.SHORT_SHA || "").slice(0, 7) || "No disponible";
 
           const escapeSlack = (value, fallback = "No disponible") => {
@@ -143,7 +145,7 @@ jobs:
             text: `Deploy GitHub Pages: ${status} - ${env.REPOSITORY}`,
             attachments: [
               {
-                color,
+                color: executionColor,
                 blocks: [
                   {
                     type: "section",
@@ -183,19 +185,6 @@ jobs:
                   },
                   {
                     type: "section",
-                    fields: [
-                      {
-                        type: "mrkdwn",
-                        text: `*Build:*\n${escapeSlack(buildResult)}`,
-                      },
-                      {
-                        type: "mrkdwn",
-                        text: `*Deploy:*\n${escapeSlack(deployResult)}`,
-                      },
-                    ],
-                  },
-                  {
-                    type: "section",
                     text: {
                       type: "mrkdwn",
                       text: `*Mensaje del commit:*\n${escapeSlack(env.COMMIT_MESSAGE)}`,
@@ -221,6 +210,30 @@ jobs:
                         url: env.COMMIT_URL,
                       },
                     ],
+                  },
+                ],
+              },
+              {
+                color: buildColor,
+                blocks: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: `*Build:* ${escapeSlack(buildResult)}`,
+                    },
+                  },
+                ],
+              },
+              {
+                color: deployColor,
+                blocks: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: `*Deploy:* ${escapeSlack(deployResult)}`,
+                    },
                   },
                 ],
               },
