@@ -61,6 +61,11 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
               label: 'Metadata',
               icon: 'pi pi-fw pi-image',
               command: () => navigate('/photo-metadata')
+            },
+            {
+              label: 'Compresor de imagenes',
+              icon: 'pi pi-fw pi-images',
+              command: () => navigate('/file-compressor')
             }
           ]
         }

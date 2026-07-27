@@ -17,7 +17,8 @@
     "primereact": "^10.9.8",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-router-dom": "^7.18.1",
+    "upng-js": "^2.1.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
