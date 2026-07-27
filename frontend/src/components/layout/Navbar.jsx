@@ -75,15 +75,13 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   ];
 
   const start = (
-    <div
-      className="flex align-items-center cursor-pointer mr-4"
-      onClick={() => { window.location.href = linkerWebsiteUrl; }}
-      role="button"
-      tabIndex={0}
+    <a
+      className="flex align-items-center cursor-pointer mr-4 no-underline text-color"
+      href={linkerWebsiteUrl}
     >
       <img src={logoUrl} alt="Corporación Linker Ec Logo" style={{ height: '55px' }} className="mr-2" />
       <span className="text-xl font-bold">Corporación Linker</span>
-    </div>
+    </a>
   );
 
   const end = (
