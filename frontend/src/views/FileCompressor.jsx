@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 
-const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 const PRESETS = {
   recommended: {
@@ -134,7 +134,7 @@ const getCandidateMimeTypes = (file, outputFormat, transparent) => {
   if (outputFormat === 'png') return ['image/png'];
 
   if (outputFormat === 'source') {
-    return IMAGE_TYPES.includes(file.type) ? [file.type] : ['image/webp', 'image/jpeg'];
+    return IMAGE_TYPES.has(file.type) ? [file.type] : ['image/webp', 'image/jpeg'];
   }
 
   return transparent
@@ -201,9 +201,9 @@ const compressImage = async (file, options) => {
       return buildOriginalResult(file, width, height);
     }
 
-    const best = candidates.reduce((smallest, candidate) => (
+    const best = candidates.slice(1).reduce((smallest, candidate) => (
       candidate.blob.size < smallest.blob.size ? candidate : smallest
-    ));
+    ), candidates[0]);
 
     return options.outputFormat !== 'auto' || best.blob.size < file.size
       ? best
