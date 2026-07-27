@@ -2,6 +2,18 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [1.0.4] - 2026-07-27
+
+### Added
+- **Image Compressor Tool:** Nueva herramienta para comprimir imagenes localmente desde el navegador.
+  - Soporte para cargar multiples imagenes y comprimir JPG, PNG, WEBP y otros formatos compatibles.
+  - Perfiles de calidad: Recomendada, Compresion baja y Compresion extrema.
+  - Salida configurable en mismo formato, WEBP, JPG, PNG comprimido o modo automatico inteligente.
+  - Compresion PNG con `upng-js` para reducir peso manteniendo formato.
+  - Previsualizacion pequena de cada imagen cargada en la lista de archivos.
+  - Acceso desde el dashboard y desde el menu `Herramientas > Fotografia`.
+
+
 ## [1.0.3] - 2026-07-21
 
 ### Added
