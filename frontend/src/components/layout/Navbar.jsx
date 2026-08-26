@@ -50,6 +50,11 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           command: () => navigate('/jwt-tool')
         },
         {
+          label: 'I love markdown',
+          icon: 'pi pi-fw pi-heart-fill',
+          command: () => navigate('/markdown-to-docx')
+        },
+        {
           label: 'Fotografía',
           icon: 'pi pi-fw pi-camera',
           items: [
