@@ -53,7 +53,7 @@ const titleFromFileName = (name) => name
   .replace(/[_-]+/g, ' ')
   .replace(/\b\p{L}/gu, (letter) => letter.toUpperCase());
 
-const cleanMarkdownText = (text) => text.replaceAll(/\*\*(.*?)\*\*/g, '$1').replaceAll(/\\\./g, '.');
+const cleanMarkdownText = (text) => text.replaceAll(/\*\*(.*?)\*\*/g, '$1').replaceAll('\\.', '.');
 
 const tableCells = (line) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
 
@@ -181,7 +181,7 @@ const createRuns = (text, settings, options = {}) => text
   .map((part) => {
     const isBold = part.startsWith('**') && part.endsWith('**');
     return new TextRun({
-      text: (isBold ? part.slice(2, -2) : part).replaceAll(/\\\./g, '.'),
+      text: (isBold ? part.slice(2, -2) : part).replaceAll('\\.', '.'),
       bold: options.bold || isBold,
       color: options.color,
       font: settings.fontFamily,
