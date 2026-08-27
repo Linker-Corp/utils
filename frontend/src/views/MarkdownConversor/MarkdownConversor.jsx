@@ -53,11 +53,111 @@ const titleFromFileName = (name) => name
   .replace(/[_-]+/g, ' ')
   .replace(/\b\p{L}/gu, (letter) => letter.toUpperCase());
 
-const cleanMarkdownText = (text) => text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\\\./g, '.');
+const cleanMarkdownText = (text) => text.replaceAll(/\*\*(.*?)\*\*/g, '$1').replaceAll(/\\\./g, '.');
 
 const tableCells = (line) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
 
 const isTableSeparator = (cells) => cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+
+const headingPrefixOf = (text) => text.match(/^(#{1,3})[ \t]+/);
+
+const bulletPrefixOf = (text) => text.match(/^-[ \t]+/);
+
+const numberedPrefixOf = (text) => text.match(/^\d+\.[ \t]+/);
+
+const readBlankBlock = ({ index, text }) => (
+  text ? null : { block: null, nextIndex: index + 1 }
+);
+
+const readPageBreakBlock = ({ index, text }) => (
+  text === '---' ? { block: { type: 'pageBreak' }, nextIndex: index + 1 } : null
+);
+
+const readTableBlock = ({ lines, index, text }) => {
+  if (!text.startsWith('|') || !lines[index + 1]?.trim().startsWith('|')) return null;
+
+  const rows = [];
+  let nextIndex = index;
+  while (nextIndex < lines.length && lines[nextIndex].trim().startsWith('|')) {
+    const cells = tableCells(lines[nextIndex]);
+    if (!isTableSeparator(cells)) rows.push(cells);
+    nextIndex += 1;
+  }
+
+  return {
+    block: rows.length ? { type: 'table', rows } : null,
+    nextIndex
+  };
+};
+
+const readHeadingBlock = ({ index, text, firstHeading }) => {
+  const prefix = headingPrefixOf(text);
+  if (!prefix) return null;
+
+  const level = prefix[1].length;
+  return {
+    block: {
+      type: 'heading',
+      level,
+      isTitle: level === 1 && firstHeading,
+      text: text.slice(prefix[0].length)
+    },
+    nextIndex: index + 1
+  };
+};
+
+const readListBlock = ({ index, text }) => {
+  const bulletPrefix = bulletPrefixOf(text);
+  if (bulletPrefix) {
+    return { block: { type: 'bullet', text: text.slice(bulletPrefix[0].length) }, nextIndex: index + 1 };
+  }
+
+  const numberedPrefix = numberedPrefixOf(text);
+  return numberedPrefix
+    ? { block: { type: 'numbered', text: text.slice(numberedPrefix[0].length) }, nextIndex: index + 1 }
+    : null;
+};
+
+const isParagraphBoundary = (text) => (
+  !text
+  || text === '---'
+  || text.startsWith('#')
+  || text.startsWith('|')
+  || Boolean(bulletPrefixOf(text))
+  || Boolean(numberedPrefixOf(text))
+);
+
+const readParagraphBlock = ({ lines, index, text }) => {
+  const paragraphLines = [text];
+  let nextIndex = index + 1;
+
+  while (nextIndex < lines.length && !isParagraphBoundary(lines[nextIndex].trim())) {
+    paragraphLines.push(lines[nextIndex].trim());
+    nextIndex += 1;
+  }
+
+  return {
+    block: { type: 'paragraph', text: paragraphLines.join(' ') },
+    nextIndex
+  };
+};
+
+const BLOCK_READERS = [
+  readBlankBlock,
+  readPageBreakBlock,
+  readTableBlock,
+  readHeadingBlock,
+  readListBlock,
+  readParagraphBlock
+];
+
+const readMarkdownBlock = (context) => {
+  for (const reader of BLOCK_READERS) {
+    const result = reader(context);
+    if (result) return result;
+  }
+  return { block: null, nextIndex: context.index + 1 };
+};
 
 const parseMarkdown = (markdown) => {
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
@@ -66,62 +166,10 @@ const parseMarkdown = (markdown) => {
   let index = 0;
 
   while (index < lines.length) {
-    const text = lines[index].trim();
-    if (!text) {
-      index += 1;
-      continue;
-    }
-
-    if (text === '---') {
-      blocks.push({ type: 'pageBreak' });
-      index += 1;
-      continue;
-    }
-
-    if (text.startsWith('|') && lines[index + 1]?.trim().startsWith('|')) {
-      const rows = [];
-      while (index < lines.length && lines[index].trim().startsWith('|')) {
-        const cells = tableCells(lines[index]);
-        if (!isTableSeparator(cells)) rows.push(cells);
-        index += 1;
-      }
-      if (rows.length) blocks.push({ type: 'table', rows });
-      continue;
-    }
-
-    const heading = text.match(/^(#{1,3})\s+(.*)$/);
-    if (heading) {
-      const level = heading[1].length;
-      const isTitle = level === 1 && firstHeading;
-      blocks.push({ type: 'heading', level, isTitle, text: heading[2] });
-      if (isTitle) firstHeading = false;
-      index += 1;
-      continue;
-    }
-
-    const bullet = text.match(/^-\s+(.*)$/);
-    if (bullet) {
-      blocks.push({ type: 'bullet', text: bullet[1] });
-      index += 1;
-      continue;
-    }
-
-    const numbered = text.match(/^\d+\.\s+(.*)$/);
-    if (numbered) {
-      blocks.push({ type: 'numbered', text: numbered[1] });
-      index += 1;
-      continue;
-    }
-
-    const paragraphLines = [text];
-    index += 1;
-    while (index < lines.length) {
-      const next = lines[index].trim();
-      if (!next || next === '---' || next.startsWith('#') || next.startsWith('|') || /^-\s+/.test(next) || /^\d+\.\s+/.test(next)) break;
-      paragraphLines.push(next);
-      index += 1;
-    }
-    blocks.push({ type: 'paragraph', text: paragraphLines.join(' ') });
+    const result = readMarkdownBlock({ lines, index, text: lines[index].trim(), firstHeading });
+    if (result.block) blocks.push(result.block);
+    if (result.block?.isTitle) firstHeading = false;
+    index = result.nextIndex;
   }
 
   return blocks;
@@ -133,13 +181,23 @@ const createRuns = (text, settings, options = {}) => text
   .map((part) => {
     const isBold = part.startsWith('**') && part.endsWith('**');
     return new TextRun({
-      text: (isBold ? part.slice(2, -2) : part).replace(/\\\./g, '.'),
+      text: (isBold ? part.slice(2, -2) : part).replaceAll(/\\\./g, '.'),
       bold: options.bold || isBold,
       color: options.color,
       font: settings.fontFamily,
       size: options.size
     });
   });
+
+const tableCellShading = (rowIndex, tableColor, stripeColor) => {
+  if (rowIndex === 0) {
+    return { fill: tableColor, type: ShadingType.CLEAR, color: 'auto' };
+  }
+  if (rowIndex % 2 === 0) {
+    return { fill: stripeColor, type: ShadingType.CLEAR, color: 'auto' };
+  }
+  return undefined;
+};
 
 const createDocxTable = (rows, settings) => {
   const columnCount = Math.max(...rows.map((row) => row.length));
@@ -153,11 +211,7 @@ const createDocxTable = (rows, settings) => {
       children: Array.from({ length: columnCount }, (_, columnIndex) => new TableCell({
         verticalAlign: VerticalAlign.CENTER,
         margins: { top: 70, left: 90, bottom: 70, right: 90 },
-        shading: rowIndex === 0
-          ? { fill: tableColor, type: ShadingType.CLEAR, color: 'auto' }
-          : rowIndex % 2 === 0
-            ? { fill: stripeColor, type: ShadingType.CLEAR, color: 'auto' }
-            : undefined,
+        shading: tableCellShading(rowIndex, tableColor, stripeColor),
         children: [new Paragraph({
           spacing: { after: 0 },
           children: createRuns(row[columnIndex] || '', settings, {
@@ -186,8 +240,10 @@ const docxChildren = (blocks, settings) => {
     if (block.type === 'pageBreak') {
       children.push(new Paragraph({ children: [new PageBreak()] }));
     } else if (block.type === 'table') {
-      children.push(createDocxTable(block.rows, settings));
-      children.push(new Paragraph({ spacing: { after: 0 } }));
+      children.push(
+        createDocxTable(block.rows, settings),
+        new Paragraph({ spacing: { after: 0 } })
+      );
     } else if (block.type === 'heading') {
       children.push(new Paragraph({
         style: block.isTitle ? 'DocumentTitle' : `DocumentHeading${block.level}`,
@@ -709,7 +765,7 @@ const MarkdownConversor = () => {
               {!markdown.trim() && (
                 <div className="surface-0 border-1 surface-border border-round p-6 text-center text-color-secondary flex flex-column justify-content-center" style={{ height: '48rem' }}>
                   <i className="pi pi-eye text-3xl mb-3 block"></i>
-                  Carga o escribe contenido Markdown para generar la vista previa.
+                  <span>Carga o escribe contenido Markdown para generar la vista previa.</span>
                 </div>
               )}
 
