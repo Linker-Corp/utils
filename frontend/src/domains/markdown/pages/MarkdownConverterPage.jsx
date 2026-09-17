@@ -26,7 +26,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
-import { DEFAULT_MARKDOWN_THEME, MARKDOWN_PALETTES } from './utils/themes';
+import { DEFAULT_MARKDOWN_THEME, MARKDOWN_PALETTES } from '../common/constants/themes';
 
 const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const WHITE = 'FFFFFF';

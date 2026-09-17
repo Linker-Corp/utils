@@ -2,7 +2,8 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
-import logoUrl from '../../assets/images/logo.png';
+import logoUrl from '@/assets/images/logo.png';
+import { ROUTES } from '@/shared/constants/routes';
 
 const Navbar = ({ isDarkMode, toggleTheme }) => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
     {
       label: 'Dashboard',
       icon: 'pi pi-fw pi-home',
-      command: () => navigate('/')
+      command: () => navigate(ROUTES.home)
     },
     {
       label: 'Herramientas',
@@ -24,7 +25,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
             {
               label: 'Excel',
               icon: 'pi pi-fw pi-file-excel',
-              command: () => navigate('/base64-decoder')
+              command: () => navigate(ROUTES.base64)
             }
           ]
         },
@@ -35,24 +36,24 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
             {
               label: 'Cédula Ecuador',
               icon: 'pi pi-fw pi-user',
-              command: () => navigate('/cedula-ecuador')
+              command: () => navigate(ROUTES.ecuadorId)
             }
           ]
         },
         {
           label: 'Text to Speech',
           icon: 'pi pi-fw pi-volume-up',
-          command: () => navigate('/text-to-speech')
+          command: () => navigate(ROUTES.textToSpeech)
         },
         {
           label: 'JWT',
           icon: 'pi pi-fw pi-key',
-          command: () => navigate('/jwt-tool')
+          command: () => navigate(ROUTES.jwt)
         },
         {
           label: 'I love markdown',
           icon: 'pi pi-fw pi-heart-fill',
-          command: () => navigate('/markdown-to-docx')
+          command: () => navigate(ROUTES.markdown)
         },
         {
           label: 'Fotografía',
@@ -61,17 +62,17 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
             {
               label: 'Background Remover',
               icon: 'pi pi-fw pi-sliders-h',
-              command: () => navigate('/background-remover')
+              command: () => navigate(ROUTES.backgroundRemover)
             },
             {
               label: 'Metadata',
               icon: 'pi pi-fw pi-image',
-              command: () => navigate('/photo-metadata')
+              command: () => navigate(ROUTES.photoMetadata)
             },
             {
               label: 'Compresor de imagenes',
               icon: 'pi pi-fw pi-images',
-              command: () => navigate('/file-compressor')
+              command: () => navigate(ROUTES.fileCompressor)
             }
           ]
         }

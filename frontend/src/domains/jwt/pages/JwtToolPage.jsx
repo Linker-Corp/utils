@@ -204,7 +204,7 @@ const JwtTool = () => {
   // Inicializar encoder con valores por defecto
   useEffect(() => {
     updateFromDecoded(headerJson, payloadJson, algorithm, secret, secretBase64Encoded, publicKey, privateKey);
-  }, [algorithm]);
+  }, [algorithm, headerJson, payloadJson, secret, secretBase64Encoded, publicKey, privateKey]);
 
   const handleAlgorithmChange = (newAlg) => {
     setAlgorithm(newAlg);
