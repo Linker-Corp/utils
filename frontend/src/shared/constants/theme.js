@@ -1,3 +1,6 @@
+import darkThemeUrl from 'primereact/resources/themes/lara-dark-indigo/theme.css?url';
+import lightThemeUrl from 'primereact/resources/themes/lara-light-indigo/theme.css?url';
+
 export const THEME = Object.freeze({
   storageKey: 'theme',
   light: 'light',
@@ -5,6 +8,9 @@ export const THEME = Object.freeze({
   linkId: 'theme-link',
 });
 
-export const themeHref = (theme) => (
-  `${import.meta.env.BASE_URL}themes/lara-${theme}-indigo/theme.css`
-);
+const THEME_URLS = Object.freeze({
+  [THEME.dark]: darkThemeUrl,
+  [THEME.light]: lightThemeUrl,
+});
+
+export const themeHref = (theme) => THEME_URLS[theme] ?? THEME_URLS[THEME.light];
